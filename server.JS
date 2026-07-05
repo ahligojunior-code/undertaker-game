@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
@@ -6,28 +5,101 @@ const io = require('socket.io')(http, { cors: { origin: "*" } });
 
 app.use(express.static('public'));
 
-// Dictionnaire officiel UNDERTAKER (15 paires de démarrage, extensible)
+// Dictionnaire UNDERTAKER - Version Élargie et Grand Public
 const DB = [
-  {a:'Café',b:'Thé',i:'Boisson',bav:'Tasse'},
-  {a:'Pizza',b:'Burger',i:'Fromage',bav:'Four'},
-  {a:'Chocolat',b:'Nutella',i:'Sucre',bav:'Noir'},
-  {a:'Croissant',b:'Pain au chocolat',i:'Boulanger',bav:'Beurre'},
-  {a:'Champagne',b:'Prosecco',i:'Alcool',bav:'Bulles'},
-  {a:'Sushi',b:'Maki',i:'Japon',bav:'Riz'},
-  {a:'Lion',b:'Tigre',i:'Savane',bav:'Crinière'},
-  {a:'Requin',b:'Dauphin',i:'Mer',bav:'Nageoire'},
-  {a:'Plage',b:'Piscine',i:'Eau',bav:'Sable'},
-  {a:'Forêt',b:'Jungle',i:'Arbre',bav:'Champignon'},
-  {a:'Batman',b:'Spider-Man',i:'Super-héros',bav:'Cape'},
-  {a:'Harry Potter',b:'Hermione',i:'Sorcier',bav:'Baguette'},
-  {a:'Guitare',b:'Violon',i:'Musique',bav:'Corde'},
-  {a:'Téléphone',b:'Tablette',i:'Écran',bav:'Batterie'},
-  {a:'Avion',b:'Fusée',i:'Voler',bav:'Aile'}
+  // --- SCIENCES, SVT & GÉOLOGIE ---
+  {a:'Volcan', b:'Séisme', i:'Terre', bav:'Magma'},
+  {a:'Planète', b:'Étoile', i:'Espace', bav:'Galaxie'},
+  {a:'Cellule', b:'Bactérie', i:'Biologie', bav:'Microscope'},
+  {a:'Cœur', b:'Poumon', i:'Organe', bav:'Sang'},
+  {a:'Dinosaure', b:'Mammouth', i:'Fossile', bav:'Os'},
+  {a:'ADN', b:'Protéine', i:'Génétique', bav:'Code'},
+  
+  // --- PHYSIQUE & CHIMIE ---
+  {a:'Atome', b:'Molécule', i:'Matière', bav:'Noyau'},
+  {a:'Électricité', b:'Magnétisme', i:'Énergie', bav:'Courant'},
+  {a:'Lumière', b:'Laser', i:'Optique', bav:'Rayon'},
+  {a:'Eau', b:'Glace', i:'Liquide', bav:'Vapeur'},
+  {a:'Pesanteur', b:'Vitesse', i:'Gravité', bav:'Chute'},
+  
+  // --- GÉOGRAPHIE & NATURE ---
+  {a:'Fleuve', b:'Océan', i:'Eau', bav:'Courant'},
+  {a:'Montagne', b:'Colline', i:'Relief', bav:'Sommet'},
+  {a:'Désert', b:'Savane', i:'Chaleur', bav:'Sable'},
+  {a:'Forêt', b:'Jungle', i:'Arbre', bav:'Feuille'},
+  {a:'Île', b:'Presqu\'île', i:'Terre', bav:'Plage'},
+  {a:'France', b:'Italie', i:'Europe', bav:'Drapeau'},
+  
+  // --- HISTOIRE & MYTHOLOGIE ---
+  {a:'Château', b:'Forteresse', i:'Moyen Âge', bav:'Tour'},
+  {a:'Chevalier', b:'Samouraï', i:'Guerrier', bav:'Épée'},
+  {a:'Pharaon', b:'Empereur', i:'Égypte', bav:'Pyramide'},
+  {a:'Zeus', b:'Hercule', i:'Dieu', bav:'Éclair'},
+  {a:'Roi', b:'Président', i:'Pouvoir', bav:'Couronne'},
+  
+  // --- AMOUR & SENTIMENTS ---
+  {a:'Amour', b:'Amitié', i:'Sentiment', bav:'Cœur'},
+  {a:'Mariage', b:'Fiançailles', i:'Fête', bav:'Bague'},
+  {a:'Rire', b:'Sourire', i:'Joie', bav:'Humour'},
+  {a:'Rêve', b:'Cauchemar', i:'Sommeil', bav:'Nuit'},
+  
+  // --- TECH & POP-CULTURE CLASSIC ---
+  {a:'Robot', b:'Ordinateur', i:'Machine', bav:'Métal'},
+  {a:'Cinéma', b:'Télévision', i:'Écran', bav:'Film'},
+  {a:'Livre', b:'Bande dessinée', i:'Lecture', bav:'Page'},
+  {a:'Google', b:'Apple', i:'Internet', bav:'Recherche'},
+  {a:'Nintendo', b:'PlayStation', i:'Console', bav:'Jeu'},
+  
+  // --- QUOTIDIEN, GASTRONOMIE & ANIMAUX ---
+  {a:'Café', b:'Thé', i:'Boisson', bav:'Tasse'},
+  {a:'Pizza', b:'Burger', i:'Nourriture', bav:'Four'},
+  {a:'Chocolat', b:'Nutella', i:'Sucre', bav:'Noir'},
+  {a:'Chien', b:'Chat', i:'Animal', bav:'Poils'},
+  {a:'Lion', b:'Tigre', i:'Félin', bav:'Griffe'},
+  {a:'Avion', b:'Fusée', i:'Transport', bav:'Voler'},
+  {a:'Guitare', b:'Piano', i:'Musique', bav:'Cordes'},
+
+  // --- NOUVEAU : ASTRONOMIE ---
+  {a:'Supernova', b:'Naine blanche', i:'Big Bang', bav:'Étoile'},
+  {a:'Nébuleuse', b:'Comète', i:'Cosmos', bav:'Galaxie'},
+  {a:'Exoplanète', b:'Trojan', i:'Système solaire', bav:'Écliptique'},
+  {a:'Pulsar', b:'Quasar', i:'Radio', bav:'Signal'},
+  {a:'Télescope', b:'Microscope', i:'Observatoire', bav:'Lentille'},
+
+  // --- NOUVEAU : MYTHOLOGIE NORDIQUE ---
+  {a:'Yggdrasil', b:'Jötunn', i:'Monde', bav:'Racine'},
+  {a:'Mjölnir', b:'Valkyrie', i:'Marteau', bav:'Foudre'},
+  {a:'Bifrost', b:'Gjallarhorn', i:'Pont', bav:'Son'},
+  {a:'Ragnarök', b:'Fimbulwinter', i:'Apocalypse', bav:'Destin'},
+  {a:'Fenrir', b:'Sköll', i:'Loup', bav:'Crocs'},
+
+  // --- NOUVEAU : CUISINE FRANÇAISE ---
+  {a:'Bouillabaisse', b:'Terrine', i:'Méditerranéen', bav:'Safran'},
+  {a:'Coq au vin', b:'Ragoût', i:'Bourgogne', bav:'Shiitake'},
+  {a:'Tarte Tatin', b:'Crêpe', i:'Normandie', bav:'Caramel'},
+
+  // --- NOUVEAU : CULTURE POP MODERNE ---
+  {a:'Marvel', b:'DC', i:'Bande dessinée', bav:'Panels'},
+  {a:'Stranger Things', b:'Dark', i:'Netflix', bav:'Upside'},
+  {a:'TikTok', b:'Snapchat', i:'Réseaux', bav:'Filtre'},
+  {a:'Pokémon', b:'Évoli', i:'Capturer', bav:'Poké Ball'},
+  {a:'Avatar', b:'Titanic', i:'Cinéma', bav:'3D'},
+
+  // --- NOUVEAU : TECHNOLOGIE AVANCÉE ---
+  {a:'Quantique', b:'Bitstream', i:'Superposition', bav:'Intrication'},
+  {a:'Blockchain', b:'Smart contract', i:'Décentralisé', bav:'Gaz'},
+
+  // --- NOUVEAU : AUTRES THÉMATIQUES INTERGÉNÉRATIONNELLES ---
+  {a:'Renaissance', b:'Baroque', i:'Art', bav:'Fresque'},
+  {a:'Sahara', b:'Désert', i:'Sable', bav:'Oasis'},
+  {a:'Mongolie', b:'Sibérie', i:'Steppe', bav:'Yak'},
+  {a:'Kabyle', b:'Berbère', i:'Culture', bav:'Tamazight'},
+  {a:'Cygne', b:'Coccinelle', i:'Insecte', bav:'Ailes'}
 ];
 
-const BAV_POOL = ['Choucroute','Bananier','Parapluie','Licorne','Cacahuète','Farfadet','Marmotte','Tapioca','Poulpe','Ravioli'];
+// Pool de mots bonus pour la mécanique du "Bavard"
+const BAV_POOL = ['Parapluie', 'Licorne', 'Cacahuète', 'Marmotte', 'Poulpe', 'Ravioli', 'Ananas', 'Astronaute', 'Choucroute', 'Bicyclette', 'Pixel', 'Tornade'];
 
-// Équilibrage strict de 3 à 12 joueurs
 const ROLE_TABLE = {
   3:  {civil:2, under:1, white:0},
   4:  {civil:2, under:1, white:1},
@@ -41,11 +113,10 @@ const ROLE_TABLE = {
   12: {civil:8, under:2, white:2}
 };
 
-let rooms = {}; 
+let rooms = {};
 
 io.on('connection', (socket) => {
   
-  // CRÉATION DE SALON
   socket.on('createRoom', ({ username }) => {
     let roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
     rooms[roomCode] = {
@@ -56,36 +127,63 @@ io.on('connection', (socket) => {
       wordA: '', wordB: '', interditWord: '', bavWord: '',
       bavardIdx: -1, muetActive: false,
       speechOrder: [], currentSpeakerIdx: 0,
-      votes: {}, pendingWhiteId: null, pendingHunterId: null
+      votes: {}, pendingWhiteId: null, pendingHunterId: null,
+      usedWordIndexes: []
     };
     joinRoomLogic(socket, roomCode, username);
   });
 
-  // REJOINDRE UN SALON
   socket.on('joinRoom', ({ roomCode, username }) => {
     roomCode = roomCode.toUpperCase();
-    if (!rooms[roomCode]) return socket.emit('errorMsg', 'Cimetière introuvable !');
+    if (!rooms[roomCode]) return socket.emit('errorMsg', 'Salon introuvable !');
     if (rooms[roomCode].gameState !== 'LOBBY') return socket.emit('errorMsg', 'Partie déjà commencée !');
     if (rooms[roomCode].players.length >= 12) return socket.emit('errorMsg', 'Salon complet (max 12) !');
     
     joinRoomLogic(socket, roomCode, username);
   });
 
-  // LANCEMENT DE LA PARTIE VIA L'HÔTE
+  socket.on('sendMessage', ({ roomCode, message }) => {
+    let room = rooms[roomCode];
+    if (!room) return;
+    let player = room.players.find(p => p.id === socket.id);
+    if (!player) return;
+
+    io.to(roomCode).emit('receiveMessage', {
+      username: player.username,
+      message: message.trim(),
+      alive: player.alive,
+      role: room.gameState === 'ENDED' ? player.role : ''
+    });
+  });
+
   socket.on('startGame', ({ roomCode, opts }) => {
     let room = rooms[roomCode];
     if (!room || room.players[0].id !== socket.id) return; 
-    if (room.players.length < 3) return socket.emit('errorMsg', 'Il faut au moins 3 fossoyeurs pour jouer !');
+    if (room.players.length < 3) return socket.emit('errorMsg', 'Il faut au moins 3 joueurs pour lancer !');
 
     room.opts = opts;
     room.gameState = 'PLAYING';
     
-    let pair = DB[Math.floor(Math.random() * DB.length)];
+    if (room.usedWordIndexes.length >= DB.length) {
+      room.usedWordIndexes = []; 
+    }
+
+    let availableIndexes = [];
+    for (let i = 0; i < DB.length; i++) {
+      if (!room.usedWordIndexes.includes(i)) {
+        availableIndexes.push(i);
+      }
+    }
+
+    let randomIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+    room.usedWordIndexes.push(randomIndex);
+
+    let pair = DB[randomIndex];
     let swap = Math.random() > 0.5;
     room.wordA = swap ? pair.b : pair.a;
     room.wordB = swap ? pair.a : pair.b;
     room.interditWord = pair.i;
-    room.bavWord = BAV_POOL[Math.floor(Math.random() * BAV_POOL.length)];
+    room.bavWord = pair.bav; // Utilise désormais l'indice contextuel du bloc ou BAV_POOL si vous préférez
 
     let config = ROLE_TABLE[room.players.length];
     let roles = [];
@@ -93,7 +191,6 @@ io.on('connection', (socket) => {
     for(let i=0; i<config.under; i++) roles.push('under');
     for(let i=0; i<config.white; i++) roles.push('white');
     
-    // Mélange de Fisher-Yates
     for (let i = roles.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [roles[i], roles[j]] = [roles[j], roles[i]];
@@ -125,7 +222,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  // TRANSITION VERS LE VOTE GENERAL
   socket.on('startVotingPhase', (roomCode) => {
     let room = rooms[roomCode];
     if (!room) return;
@@ -134,7 +230,6 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit('votingPhase', { players: room.players.filter(p => p.alive) });
   });
 
-  // ENREGISTREMENT D'UN VOTE EN LIGNE
   socket.on('submitVote', ({ roomCode, targetId }) => {
     let room = rooms[roomCode];
     if (!room || room.gameState !== 'VOTING') return;
@@ -147,7 +242,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // MR WHITE TENTE DE DEVINER LE MOT
   socket.on('submitWhiteGuess', ({ roomCode, guess }) => {
     let room = rooms[roomCode];
     if (!room) return;
@@ -155,14 +249,13 @@ io.on('connection', (socket) => {
     let target = room.wordA.toLowerCase();
     
     if (guess.trim().toLowerCase() === target || (target.includes(guess.trim().toLowerCase()) && guess.trim().length > 2)) {
-      endGame(roomCode, 'white_win', `🕵️ Mr White (${whitePlayer.username}) s'est échappé de la tombe ! Il a deviné le mot "${room.wordA}".`);
+      endGame(roomCode, 'white_win', `🕵️ Mr White (${whitePlayer.username}) a hacké le système ! Il a deviné le mot "${room.wordA}".`);
     } else {
-      io.to(roomCode).emit('toastMsg', `❌ Mauvais mot ! Mr White reste enterré.`);
+      io.to(roomCode).emit('toastMsg', `❌ Mauvais mot ! Mr White reste éliminé.`);
       checkVictoryConditions(roomCode);
     }
   });
 
-  // POUVOIR DU CHASSEUR ÉLIMINÉ
   socket.on('submitHunterShot', ({ roomCode, targetId }) => {
     let room = rooms[roomCode];
     if (!room) return;
@@ -170,7 +263,7 @@ io.on('connection', (socket) => {
     
     if (target.role === 'under' || target.role === 'white') {
       target.alive = false;
-      io.to(roomCode).emit('toastMsg', `🎯 Tir parfait ! L'intrus ${target.username} est envoyé à la morgue !`);
+      io.to(roomCode).emit('toastMsg', `🎯 HEADSHOT ! L'intrus ${target.username} est éliminé !`);
     } else {
       io.to(roomCode).emit('toastMsg', `💨 Balle perdue ! ${target.username} était innocent.`);
     }
@@ -261,9 +354,9 @@ function checkVictoryConditions(roomCode) {
   let impostors = alive.filter(p => p.role === 'under' || p.role === 'white');
 
   if (impostors.length === 0) {
-    endGame(roomCode, 'civils', "Le Croque-mort a enterré tous les traîtres ! Victoire des Civils !");
+    endGame(roomCode, 'civils', "Tous les intrus ont été démasqués ! Victoire des Civils !");
   } else if (civils.length <= impostors.length) {
-    endGame(roomCode, 'impostors', "Les infiltrés ont creusé la tombe de l'alliance ! Victoire des Intrus.");
+    endGame(roomCode, 'impostors', "Les intrus ont pris le contrôle du salon ! Victoire des Intrus.");
   } else {
     room.muetActive = false;
     generateSpeechOrder(room);
@@ -279,4 +372,4 @@ function endGame(roomCode, winner, desc) {
 }
 
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => console.log(`⚰️ UNDERTAKER tourne sur le port ${PORT}`));
+http.listen(PORT, () => console.log(`🎮 UNDERTAKER en ligne sur le port ${PORT}`));
